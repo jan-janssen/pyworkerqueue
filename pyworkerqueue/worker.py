@@ -4,28 +4,22 @@ from inspect import getsource
 
 def worker_function_one_way(queue):
     while True:
-        status, functext, func_args = queue.get(
-            block=True,
-            timeout=None
-        )
+        status, functext, func_args = queue.get(block=True, timeout=None)
         if status:
             scope = {}
             exec(functext, scope)
-            scope['func'](func_args)
+            scope["func"](func_args)
         else:
             break
 
 
 def worker_function_multi_way(queue_in, queue_out):
     while True:
-        status, functext, func_args = queue_in.get(
-            block=True,
-            timeout=None
-        )
+        status, functext, func_args = queue_in.get(block=True, timeout=None)
         if status:
             scope = {}
             exec(functext, scope)
-            queue_out.put(scope['func'](func_args))
+            queue_out.put(scope["func"](func_args))
         else:
             break
 
@@ -40,14 +34,17 @@ class Worker:
             self._pool = multiprocessing.Pool(
                 processes=self._processes,
                 initializer=worker_function_multi_way,
-                initargs=(self._queue_in, self._queue_out,)
+                initargs=(
+                    self._queue_in,
+                    self._queue_out,
+                ),
             )
         else:
             self._queue_out = None
             self._pool = multiprocessing.Pool(
                 processes=self._processes,
                 initializer=worker_function_one_way,
-                initargs=(self._queue_in,)
+                initargs=(self._queue_in,),
             )
 
     @property
@@ -60,28 +57,23 @@ class Worker:
 
     def get(self, block=True, timeout=None):
         if self._queue_out is not None:
-            return self._queue_out.get(
-                block=block,
-                timeout=timeout
-            )
+            return self._queue_out.get(block=block, timeout=timeout)
         else:
-            raise ValueError("Enable bidirectional communication using Worker(bidirectional=True).")
+            raise ValueError(
+                "Enable bidirectional communication using Worker(bidirectional=True)."
+            )
 
     def put(self, obj, block=True, timeout=None):
         self._queue_in.put(
-            obj=[
-                True,
-                self._make_functext(self._initializer),
-                obj
-            ],
+            obj=[True, self._make_functext(self._initializer), obj],
             block=block,
-            timeout=timeout
+            timeout=timeout,
         )
 
     @staticmethod
     def _make_functext(func):
         ft = getsource(func)
-        ft = ft.replace(func.__name__, 'func')
+        ft = ft.replace(func.__name__, "func")
         return ft
 
     def __enter__(self):
