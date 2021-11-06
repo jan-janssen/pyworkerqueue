@@ -40,9 +40,9 @@ def get_config():
     cfg = VersioneerConfig()
     cfg.VCS = "git"
     cfg.style = "pep440-pre"
-    cfg.tag_prefix = "pyworkerqueue-"
-    cfg.parentdir_prefix = "pyworkerqueue"
-    cfg.versionfile_source = "pyworkerqueue/_version.py"
+    cfg.tag_prefix = "aproc-"
+    cfg.parentdir_prefix = "aproc"
+    cfg.versionfile_source = "aproc/_version.py"
     cfg.verbose = False
     return cfg
 

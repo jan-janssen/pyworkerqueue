@@ -1,5 +1,5 @@
 import unittest
-from pyworkerqueue import Worker
+from aproc import Pool
 
 
 def print_function(args):
@@ -16,14 +16,14 @@ def double_int(args):
 
 class TestWorker(unittest.TestCase):
     def test_one_way(self):
-        with Worker(processes=2, initializer=print_function, bidirectional=False) as w:
+        with Pool(processes=2, initializer=print_function, bidirectional=False) as w:
             w.put(1)
             w.put("two")
             w.put({"three": 3})
             w.put([4])
 
     def test_both_way(self):
-        with Worker(processes=1, initializer=both_way, bidirectional=True) as w:
+        with Pool(processes=1, initializer=both_way, bidirectional=True) as w:
             w.put(1)
             self.assertEqual(w.get(), 1)
             w.put("two")
@@ -34,7 +34,7 @@ class TestWorker(unittest.TestCase):
             self.assertEqual(w.get(), [4])
 
     def test_change_function(self):
-        with Worker(processes=1, initializer=both_way, bidirectional=True) as w:
+        with Pool(processes=1, initializer=both_way, bidirectional=True) as w:
             w.put(1)
             self.assertEqual(w.get(), 1)
             w.function = double_int
@@ -43,5 +43,5 @@ class TestWorker(unittest.TestCase):
 
     def test_bidirectional_error(self):
         with self.assertRaises(ValueError):
-            with Worker(processes=1, initializer=both_way, bidirectional=False) as w:
+            with Pool(processes=1, initializer=both_way, bidirectional=False) as w:
                 w.get()

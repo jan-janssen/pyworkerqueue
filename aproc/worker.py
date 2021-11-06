@@ -24,7 +24,7 @@ def worker_function_multi_way(queue_in, queue_out):
             break
 
 
-class Worker:
+class Pool:
     def __init__(self, processes, initializer, bidirectional=False):
         self._queue_in = multiprocessing.Queue()
         self._processes = processes

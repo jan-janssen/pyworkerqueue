@@ -5,12 +5,12 @@ from setuptools import setup, find_packages
 import versioneer
 
 setup(
-    name='pyworkerqueue',
+    name='aproc',
     version=versioneer.get_version(),
-    description='pyworkerqueue - A multiprocessing pool with asynchronous queue',
-    long_description='pyworkerqueue simplifies the parallel execution of a growing list of objects.',
-
-    url='https://github.com/pyiron/pyworkerqueue',
+    description='aproc - for asynchronous multiprocessing',
+    long_description='aproc extends the multiprocessing library by combining a multiprocessing pool '
+                     'with a multiprocessing queue',
+    url='https://github.com/pyiron/aproc',
     author='Jan Janssen',
     author_email='janssen@mpie.de',
     license='BSD',
@@ -26,7 +26,7 @@ setup(
                  'Programming Language :: Python :: 3.9'
                 ],
 
-    keywords='pyworkerqueue',
+    keywords='aproc',
     packages=find_packages(exclude=["*tests*", "*binder*", "*notebooks*"]),
     cmdclass=versioneer.get_cmdclass(),
     )
